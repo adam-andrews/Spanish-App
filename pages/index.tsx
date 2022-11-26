@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-
+import Question from '../features/questions/Question';
 export default function Home() {
 	return (
 		<div className={styles.container}>
@@ -12,6 +12,7 @@ export default function Home() {
 			</Head>
 
 			<h1 className="text-3xl font-bold ">Hello world!</h1>
+			<Question />
 		</div>
 	);
 }

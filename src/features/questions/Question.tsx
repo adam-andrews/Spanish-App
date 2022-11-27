@@ -5,14 +5,23 @@ function Question() {
 	const [points, setPoints] = useState(0);
 
 	function loseLive() {
+		if (lives <= 0) {
+			gameOver();
+			return;
+		}
 		setLives(lives - 1);
 	}
 	function gainPoint() {
 		setPoints(points + 1);
 	}
 
+	function gameOver() {
+		setLives(3);
+		setPoints(0);
+	}
+
 	//Loops for each life add a heart
-	const hearts = '❤️'.repeat(lives ? lives : 0) + '💔'.repeat(3 - lives);
+	const hearts = '❤️'.repeat(lives) + '💔'.repeat(3 - lives);
 
 	return (
 		<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 bg-blue-500  h-screen">

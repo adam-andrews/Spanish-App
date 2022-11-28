@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
@@ -13,12 +13,22 @@ function Question() {
 	const { questions } = useSelector((state: RootState) => state.questions);
 	const [lives, setLives] = useState(3);
 	const [points, setPoints] = useState(0);
-	const [currentQuestion, setCurrentQuestion] = useState<QuestionType>(
-		questions[0]
-	);
+	const [questionNumber, setQuestionNumber] = useState(1);
+	const [currentQuestion, setCurrentQuestion] = useState<QuestionType>();
+	const shuffledQuestions = questions.slice().sort(() => Math.random() - 0.5);
+
+	useEffect(() => {
+		setCurrentQuestion(shuffledQuestions[questionNumber - 1]);
+	}, []);
+	function shuffleQuestions(array: QuestionType[]) {
+		for (let i = array.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[array[i], array[j]] = [array[j], array[i]];
+		}
+	}
 
 	function checkAnswer(answer: 'masculine' | 'feminine') {
-		if (currentQuestion.answer === answer) {
+		if (currentQuestion?.answer === answer) {
 			setPoints(points + 1);
 		} else {
 			setLives(lives - 1);
@@ -27,11 +37,14 @@ function Question() {
 		if (lives === 1) {
 			gameOver();
 		}
-
-		setCurrentQuestion(questions[1]);
+		setQuestionNumber(questionNumber + 1);
+		questions[questionNumber]
+			? setCurrentQuestion(questions[questionNumber])
+			: gameOver();
 	}
 
 	function gameOver() {
+		alert('Game Over');
 		setLives(3);
 		setPoints(0);
 	}
@@ -44,7 +57,7 @@ function Question() {
 				{/* {Score will go here} */}
 				<div className="text-9xl">{points}</div>
 				{/* {Question will go here} */}
-				<div className="text-9xl">{currentQuestion.question}</div>
+				<div className="text-9xl">{currentQuestion?.question}</div>
 				{/* {Answer options will go here} */}
 				<div className="flex gap-8 my-10 text-3xl">
 					<button
